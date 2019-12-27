@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Calculo</title>
+    </head>
+
+    <body>
+        <h1 align='center'>Calculo de Rendimentos</h1>
+
+        <h3>Cadastro de Aplicações</h3>
+
+        <form>
+            Data de Depósito:
+            <br>
+            <input type="text" id="data" value="">
+            <br>
+            Descrição:
+            <br>
+            <input type="text" id="desc" value="">
+            <br>
+            Valor Depositado:
+            <br>
+            <input type="text" id="valor" value="">
+            <br>
+            Porcentagem:
+            <br>
+            <input type="text" id="porc" onblur="calcularRend()" value="">
+            <br>
+            Rendimento:
+            <br>
+            <input type="text" id="resultado" value="" readonly>
+            <br>
+            <p id="msg"></p>
+            <input type="button" value="Cadastrar" onclick="cadastrar()"/>
+            <br><br>
+        </form>
+
+        <h3> Tabela de Aplicações </h3>
+
+        <table>
+            <thead> 
+                <tr>
+                    <th>Data</th> <th>Descrição</th> <th>Valor</th> <th>Porcentagem</th> <th>Rendimento</th>
+                </tr>
+            </thead> 
+
+            <tbody id="tbAplicacoes" align="center">
+
+            </tbody>
+        </table>
+        <p>Total Aplicação: </p> <p id="msgTotalAplicacao"></p>
+        <p>Total Rendimento: </p> <p id="msgTotalRendimento"></p>
+    </body>
+
+    <script type="text/javascript" src="scriptMinhaPagina.js">
+    </script>
+</html>
