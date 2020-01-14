@@ -1,86 +1,91 @@
-var aplicacoes = [];
-var modoEditar = false;
-var indice = 0;
+var aplicacoes = []; //criação de vetor global de aplicações
+var modoEditar = false; //variavel para setar modo editar desativado
+var indice = 0; 
 
 //FUNÇÕES UTILITÁRIAS
-function id(campo) {
-    return document.getElementById(campo);
+
+function id(id) { //recebe o ID do campo e return seu HTML.
+    return document.getElementById(id);
 }
 
-function getValor(input) {
-    var valor = document.getElementById(input).value.replace(',', '.');
+function getValorFloat(id) { //recebe um ID busca o valor no HTML e retorna em Float. 
+    var valor = document.getElementById(id).value.replace(',', '.');
     return parseFloat(valor);
 }
 
-function getTexto(input) {
-    var texto = document.getElementById(input).value;
+function getTexto(id) { //recebe um ID busca o valor no HTML e retorna em Texto.
+    var texto = document.getElementById(id).value;
     return texto;
 }
 
-function formatToMoney(valor) {
+function formatToMoney(valor) { //recebe um valor e retorna formatado para Real Brasileiro.
     valorFormatado = valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
     return valorFormatado;
 }
 
-function formatToPercent(valor) {
+function formatToPercent(valor) { //recebe um valor e retorna formatado com um simbolo de porcentagem.
     valorFormatado = valor+"%";
     return valorFormatado;
 }
 
-function calcularRend() {
-    var rendimento = getValor("valor") * (getValor("porc")/100);
+function calcularRend() { //calcula o valor do rendimento buscando valor e porcentagem no HTML.
+    var rendimento = getValorFloat("valor") * (getValorFloat("porc")/100);
     id("resultado").value = rendimento;
 }
 
-function validaCampo(campo) {
-    if (getTexto(campo)=="" || getValor(campo)=="") {
+function validaCampo(campo) { //recebe um ID e testa se tem Texto ou Número e retorna falso se estiver vazio e verdadeiro se preenchido. 
+    if (getTexto(campo)=="" || getValorFloat(campo)=="") {
         return false;
     } else { 
         return true;
     }
 }
 
-function somaAplicacoes(aplicacoes) {
+function somaAplicacoes(aplicacoes) { //receber o vetor aplicações, itera o vetor e soma o valor de todos e inseri o resultado em uma mensagem no html.
     var soma = 0;
     for(var i=0; i<aplicacoes.length; i++) {
         soma = soma + aplicacoes[i].valor;
     }
     somaFormatada = formatToMoney(soma);
-    document.querySelector("#msgTotalAplicacao").innerHTML = somaFormatada;
+    mostraMsg("#msgTotalAplicacao",somaFormatada);
 }
 
-function somaRendimentos(aplicacoes) {
+function somaRendimentos(aplicacoes) { //recebe o vetor aplicações, itera o vetor e soma o rendimento de todos e inseri o resultado em uma mensagem no html.
     var soma = 0;
     for(var i=0; i<aplicacoes.length; i++) {
         soma = soma + aplicacoes[i].result;
     }
     somaFormatada = formatToMoney(soma);
-    document.querySelector("#msgTotalRendimento").innerHTML = somaFormatada;
+    mostraMsg("#msgTotalRendimento",somaFormatada);
 }
 
-function criarElemento(elemento) {
-    var createElement = document.createElement('p');
+/*function criarElemento(elemento) {
+    //var createElement = document.createElement('p');
     var createElement = document.createTextNode(elemento);
     var msg = document.querySelector("#msg");
     msg.appendChild(createElement);
+}*/
+
+//FUNÇÕES DE MANIPULAÇÃO DA DOM
+function mostraMsg(id, mensagem) { //recebe um ID e uma mensagem para ser inserida em uma campo do HTML.
+    document.querySelector(id).innerHTML = mensagem;
 }
 
-function limparElemento() {
+function limpaElementoMsg() { //limpa o elemento MSG inserindo uma String vazia no campo do HTML.
     elemento = document.getElementById("msg");
     text = "";
     elemento.innerHTML = text;
 }
 
-//FUNÇÕES DE MANIPULAÇÃO A DOM
-function limparDados() {
-    document.getElementById("data").value = "";
-    document.getElementById("desc").value = "";
-    document.getElementById("valor").value = "";
-    document.getElementById("porc").value = "";
-    document.getElementById("resultado").value = "";
+function limparDados() { //limpa os valores dos dados no formulario.
+    id("data").value = "";
+    id("desc").value = "";
+    id("valor").value = "";
+    id("porc").value = "";
+    id("resultado").value = "";
 }
 
-function renderTbAplicacoes(arrayAplicacoes) {
+function renderTbAplicacoes(arrayAplicacoes) { //recebe o vetor aplicações e renderiza a tabela com os valores cadastrados no vetor.
     dados = "";
     for(i=0; i<arrayAplicacoes.length; i++){
         dados += "<tr>";
@@ -101,28 +106,28 @@ function cadastrar() {
     if(modoEditar == true) {
         aplicacoes[indice].data = getTexto("data");
         aplicacoes[indice].desc = getTexto("desc");
-        aplicacoes[indice].valor = getValor("valor");
-        aplicacoes[indice].tipo = getValor("porc");
-        aplicacoes[indice].result = getValor("resultado");
+        aplicacoes[indice].valor = getValorFloat("valor");
+        aplicacoes[indice].tipo = getValorFloat("porc");
+        aplicacoes[indice].result = getValorFloat("resultado");
 
         modoEditar = false;
     } else {
-        limparElemento();
+        limpaElementoMsg();
         if(validaCampo("data") == false) {
-            criarElemento("O campo Data é obrigatório!");
+            mostraMsg("#msg","O campo Data é obrigatório!");
         } else if (validaCampo("desc") == false){
-            criarElemento("O campo Descrição é obrigatório!");
+            mostraMsg("#msg","O campo Descrição é obrigatório!");
         } else if (validaCampo("valor") == false) {
-            criarElemento("O campo Valor é obrigatório!");
+            mostraMsg("#msg","O campo Valor é obrigatório!");
         } else if (validaCampo("porc") == false) {
-            criarElemento("O campo Porcentagem é obrigatório!");
+            mostraMsg("#msg","O campo Porcentagem é obrigatório!");
         } else {
             var aplicacao = {
                 data: getTexto("data"),
                 desc: getTexto("desc"),
-                valor: getValor("valor"),
-                tipo: getValor("porc"),
-                result: getValor("resultado")
+                valor: getValorFloat("valor"),
+                tipo: getValorFloat("porc"),
+                result: getValorFloat("resultado")
             }
             aplicacoes.push(aplicacao);
         }
